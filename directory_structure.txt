@@ -1,0 +1,23 @@
+service-marketplace-backend/
+├── config/
+│   └── db.js
+├── controllers/
+│   ├── authController.js
+│   ├── serviceController.js
+│   └── bookingController.js
+├── middleware/
+│   └── auth.js
+├── models/
+│   ├── User.js
+│   ├── Service.js
+│   └── Booking.js
+├── routes/
+│   ├── auth.js
+│   ├── services.js
+│   └── bookings.js
+├── utils/
+│   └── errorHandler.js
+├── .env
+├── .gitignore
+├── package.json
+└── server.js
