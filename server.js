@@ -1,15 +1,18 @@
 require('dotenv').config();
+
 const express = require('express');
+
 const mongoose = require('mongoose');
 const cors = require('cors');
 const errorHandler = require('./utils/errorHandler');
 
 // Import routes
 const authRoutes = require('./routes/auth');
-const serviceRoutes = require('./routes/services');
+const serviceRoutes = require('./routes/service');
 const bookingRoutes = require('./routes/bookings');
 
 // Create Express app
+
 const app = express();
 
 // Middleware
