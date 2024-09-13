@@ -1,11 +1,10 @@
-
-const Booking = require('../models/Booking');
-const Service = require('../models/Service');
+import Booking from '../models/Booking.js';
+import Service from '../models/Service.js';
 
 // @desc    Get all bookings
 // @route   GET /api/bookings
 // @access  Private
-exports.getBookings = async (req, res, next) => {
+export const getBookings = async (req, res, next) => {
   try {
     let query;
 
@@ -38,7 +37,7 @@ exports.getBookings = async (req, res, next) => {
 // @desc    Get single booking
 // @route   GET /api/bookings/:id
 // @access  Private
-exports.getBooking = async (req, res, next) => {
+export const getBooking = async (req, res, next) => {
   try {
     const booking = await Booking.findById(req.params.id).populate({
       path: 'service',
@@ -71,7 +70,7 @@ exports.getBooking = async (req, res, next) => {
 // @desc    Create new booking
 // @route   POST /api/bookings
 // @access  Private
-exports.createBooking = async (req, res, next) => {
+export const createBooking = async (req, res, next) => {
   try {
     req.body.customer = req.user.id;
 
@@ -103,7 +102,7 @@ exports.createBooking = async (req, res, next) => {
 // @desc    Update booking
 // @route   PUT /api/bookings/:id
 // @access  Private
-exports.updateBooking = async (req, res, next) => {
+export const updateBooking = async (req, res, next) => {
   try {
     let booking = await Booking.findById(req.params.id);
 
@@ -132,7 +131,7 @@ exports.updateBooking = async (req, res, next) => {
 // @desc    Delete booking
 // @route   DELETE /api/bookings/:id
 // @access  Private
-exports.deleteBooking = async (req, res, next) => {
+export const deleteBooking = async (req, res, next) => {
   try {
     const booking = await Booking.findById(req.params.id);
 
@@ -145,7 +144,7 @@ exports.deleteBooking = async (req, res, next) => {
       return res.status(401).json({ success: false, error: 'Not authorized to delete this booking' });
     }
 
-    await booking.remove();
+    await booking.deleteOne();
 
     res.status(200).json({ success: true, data: {} });
   } catch (err) {

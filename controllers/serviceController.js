@@ -1,9 +1,9 @@
-const Service = require('../models/Service');
+import Service from '../models/Service.js';
 
 // @desc    Get all services
 // @route   GET /api/services
 // @access  Public
-exports.getServices = async (req, res, next) => {
+export const getServices = async (req, res, next) => {
   try {
     const services = await Service.find().populate('provider', 'name email');
     res.status(200).json({ success: true, count: services.length, data: services });
@@ -15,7 +15,7 @@ exports.getServices = async (req, res, next) => {
 // @desc    Get single service
 // @route   GET /api/services/:id
 // @access  Public
-exports.getService = async (req, res, next) => {
+export const getService = async (req, res, next) => {
   try {
     const service = await Service.findById(req.params.id).populate('provider', 'name email');
 
@@ -32,7 +32,7 @@ exports.getService = async (req, res, next) => {
 // @desc    Create new service
 // @route   POST /api/services
 // @access  Private (Provider only)
-exports.createService = async (req, res, next) => {
+export const createService = async (req, res, next) => {
   try {
     // Add user to req.body
     req.body.provider = req.user.id;
@@ -51,7 +51,7 @@ exports.createService = async (req, res, next) => {
 // @desc    Update service
 // @route   PUT /api/services/:id
 // @access  Private (Provider only)
-exports.updateService = async (req, res, next) => {
+export const updateService = async (req, res, next) => {
   try {
     let service = await Service.findById(req.params.id);
 
@@ -78,7 +78,7 @@ exports.updateService = async (req, res, next) => {
 // @desc    Delete service
 // @route   DELETE /api/services/:id
 // @access  Private (Provider only)
-exports.deleteService = async (req, res, next) => {
+export const deleteService = async (req, res, next) => {
   try {
     const service = await Service.findById(req.params.id);
 

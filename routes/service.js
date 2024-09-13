@@ -1,15 +1,15 @@
-const express = require('express');
-const {
+import express from 'express';
+import {
   getServices,
   getService,
   createService,
   updateService,
   deleteService
-} = require('../controllers/serviceController');
+} from '../controllers/serviceController.js';
 
 const router = express.Router();
 
-const { protect, authorize } = require('../middleware/auth');
+import { protect, authorize } from '../middleware/auth.js';
 
 router
   .route('/')
@@ -22,4 +22,4 @@ router
   .put(protect, authorize('provider', 'admin'), updateService)
   .delete(protect, authorize('provider', 'admin'), deleteService);
 
-module.exports = router;
+export default router;
