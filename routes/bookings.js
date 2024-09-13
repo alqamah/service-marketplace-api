@@ -21,5 +21,5 @@ router
   .get(protect, getBooking)
   .put(protect, updateBooking)
   .delete(protect, authorize('customer', 'admin'), deleteBooking);
-
+ 
 export default router;

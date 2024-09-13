@@ -55,8 +55,8 @@ export const getBooking = async (req, res, next) => {
     }
 
     // Make sure user is booking owner or provider
-    if (booking.customer.toString() !== req.user.id && 
-        booking.provider.toString() !== req.user.id && 
+    if (booking.customer.id.toString() !== req.user.id && 
+        booking.provider.id.toString() !== req.user.id && 
         req.user.role !== 'admin') {
       return res.status(401).json({ success: false, error: 'Not authorized to access this booking' });
     }
@@ -109,14 +109,19 @@ export const updateBooking = async (req, res, next) => {
     if (!booking) {
       return res.status(404).json({ success: false, error: 'Booking not found' });
     }
-
+    
     // Make sure user is booking owner or provider
     if (booking.customer.toString() !== req.user.id && 
         booking.provider.toString() !== req.user.id && 
         req.user.role !== 'admin') {
       return res.status(401).json({ success: false, error: 'Not authorized to update this booking' });
     }
-
+    if(req.body.status === 'confirmed' && req.user.role !== 'provider'){
+      return res.status(401).json({ success: false, error: 'Not authorized to confirm this booking' });
+    } 
+    if(req.body.status === 'completed' && req.user.role !== 'customer'){
+      return res.status(401).json({ success: false, error: 'Not authorized to complete this booking' });
+    }
     booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
