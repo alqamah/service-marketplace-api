@@ -91,7 +91,7 @@ export const deleteService = async (req, res, next) => {
       return res.status(401).json({ success: false, error: 'Not authorized to delete this service' });
     }
 
-    await service.remove();
+    await Service.findByIdAndDelete(req.params.id);
 
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
