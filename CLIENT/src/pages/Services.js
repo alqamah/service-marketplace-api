@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import ServiceList from '../components/Services/ServiceList';
-import ServiceForm from '../components/Services/ServiceForm';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchServices } from '../redux/slices/serviceSlice';
+import ServiceList from '../components/Services/ServiceList';
+import ServiceForm from '../components/Services/ServiceForm';
 
 const Services = () => {
   const dispatch = useDispatch();
@@ -17,9 +17,9 @@ const Services = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>
+    <div className="services">
       <h1>Services</h1>
-      <button onClick={() => setShowForm(!showForm)}>
+      <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
         {showForm ? 'Hide Form' : 'Add New Service'}
       </button>
       {showForm && <ServiceForm />}
