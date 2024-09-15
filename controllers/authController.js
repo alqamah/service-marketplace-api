@@ -22,7 +22,12 @@ export const register = async (req, res, next) => {
       role
     });
 
-    sendTokenResponse(user, 201, res);
+    res
+      .status(201)
+      .json({
+        success: true,
+        user,
+      });
   } catch (err) {
     next(err);
   }
@@ -58,6 +63,8 @@ export const login = async (req, res, next) => {
   }
 };
 
+
+
 // Helper function to get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
   // Create token
@@ -69,6 +76,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     .status(statusCode)
     .json({
       success: true,
+      user,
       token
     });
 };

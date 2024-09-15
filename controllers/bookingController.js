@@ -72,8 +72,8 @@ export const getBooking = async (req, res, next) => {
 // @access  Private
 export const createBooking = async (req, res, next) => {
   try {
+    
     req.body.customer = req.user.id;
-
     const service = await Service.findById(req.body.service);
 
     if (!service) {

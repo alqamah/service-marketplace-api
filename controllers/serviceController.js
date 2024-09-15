@@ -18,7 +18,7 @@ export const getServices = async (req, res, next) => {
 export const getService = async (req, res, next) => {
   try {
     const service = await Service.findById(req.params.id).populate('provider', 'name email');
-
+    console.log("service details:",service);
     if (!service) {
       return res.status(404).json({ success: false, error: 'Service not found' });
     }
@@ -36,9 +36,7 @@ export const createService = async (req, res, next) => {
   try {
     // Add user to req.body
     req.body.provider = req.user.id;
-
-    const service = await Service.create(req.body);
-
+    const service = await Service.create(req.body); 
     res.status(201).json({
       success: true,
       data: service
