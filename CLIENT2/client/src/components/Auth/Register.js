@@ -14,6 +14,7 @@ function Register() {
       console.log(response.data);
       // Handle successful registration (e.g., redirect to login)
     } catch (error) {
+      console.log(error); 
       console.error('Registration error', error.response.data);
     }
   };

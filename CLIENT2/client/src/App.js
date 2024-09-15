@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import Home from './components/Home';
+import Home from './components/Homepage.js';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register.js';
 import ServiceList from './components/Services/ServiceList';
@@ -15,16 +15,16 @@ function App() {
     <Router>
       <div className="App">
         <Navigation />
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route exact path="/services" component={ServiceList} />
-          <Route path="/services/:id" component={ServiceDetail} />
-          <Route path="/book/:serviceId" component={BookingCreate} />
-          <Route path="/bookings" component={BookingList} />
-          <Route path="/profile" component={Profile} />
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/services" element={<ServiceList />} />
+          <Route path="/services/:id" element={<ServiceDetail />} />
+          <Route path="/book/:serviceId" element={<BookingCreate />} />
+          <Route path="/bookings" element={<BookingList />} />
+          <Route path="/profile" element={<Profile />} />
+        </Routes>
       </div>
     </Router>
   );
