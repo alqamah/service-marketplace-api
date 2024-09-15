@@ -1,0 +1,567 @@
+
+=== File: authController.js ===
+Path: controllers\authController.js
+
+import User from '../models/User.js';
+import jwt from 'jsonwebtoken';
+
+// @desc    Register user
+// @route   POST /api/auth/register
+// @access  Public
+export const register = async (req, res, next) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    // Check if user already exists
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ error: 'User already exists' });
+    }
+
+    // Create user
+    user = await User.create({
+      name,
+      email,
+      password,
+      role
+    });
+
+    res
+      .status(201)
+      .json({
+        success: true,
+        user,
+      });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Login user
+// @route   POST /api/auth/login
+// @access  Public
+export const login = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // Validate email & password
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Please provide an email and password' });
+    }
+
+    // Check for user
+    const user = await User.findOne({ email }).select('+password');
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    // Check if password matches
+    const isMatch = await user.matchPassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    sendTokenResponse(user, 200, res);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+
+// Helper function to get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res) => {
+  // Create token
+  const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE
+  });
+
+  res
+    .status(statusCode)
+    .json({
+      success: true,
+      user,
+      token
+    });
+};
+
+=== File: bookingController.js ===
+Path: controllers\bookingController.js
+
+import Booking from '../models/Booking.js';
+import Service from '../models/Service.js';
+
+// @desc    Get all bookings
+// @route   GET /api/bookings
+// @access  Private
+export const getBookings = async (req, res, next) => {
+  try {
+    let query;
+
+    // If user is not an admin, they can only see their own bookings
+    if (req.user.role !== 'admin') {
+      query = Booking.find({ 
+        $or: [{ customer: req.user.id }, { provider: req.user.id }]
+      });
+    } else {
+      query = Booking.find();
+    }
+
+    const bookings = await query.populate({
+      path: 'service',
+      select: 'name description'
+    }).populate({
+      path: 'customer',
+      select: 'name email'
+    }).populate({
+      path: 'provider',
+      select: 'name email'
+    });
+
+    res.status(200).json({ success: true, count: bookings.length, data: bookings });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Get single booking
+// @route   GET /api/bookings/:id
+// @access  Private
+export const getBooking = async (req, res, next) => {
+  try {
+    const booking = await Booking.findById(req.params.id).populate({
+      path: 'service',
+      select: 'name description'
+    }).populate({
+      path: 'customer',
+      select: 'name email'
+    }).populate({
+      path: 'provider',
+      select: 'name email'
+    });
+
+    if (!booking) {
+      return res.status(404).json({ success: false, error: 'Booking not found' });
+    }
+
+    // Make sure user is booking owner or provider
+    if (booking.customer.id.toString() !== req.user.id && 
+        booking.provider.id.toString() !== req.user.id && 
+        req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, error: 'Not authorized to access this booking' });
+    }
+
+    res.status(200).json({ success: true, data: booking });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Create new booking
+// @route   POST /api/bookings
+// @access  Private
+export const createBooking = async (req, res, next) => {
+  try {
+    
+    req.body.customer = req.user.id;
+    const service = await Service.findById(req.body.service);
+
+    if (!service) {
+      return res.status(404).json({ success: false, error: 'Service not found' });
+    }
+
+    // Check if service is available
+    if (!service.isAvailable) {
+      return res.status(400).json({ success: false, error: 'Service is not available for booking' });
+    }
+
+    req.body.provider = service.provider;
+    req.body.totalPrice = service.price;
+
+    const booking = await Booking.create(req.body);
+
+    res.status(201).json({
+      success: true,
+      data: booking
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Update booking
+// @route   PUT /api/bookings/:id
+// @access  Private
+export const updateBooking = async (req, res, next) => {
+  try {
+    let booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ success: false, error: 'Booking not found' });
+    }
+    
+    // Make sure user is booking owner or provider
+    if (booking.customer.toString() !== req.user.id && 
+        booking.provider.toString() !== req.user.id && 
+        req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, error: 'Not authorized to update this booking' });
+    }
+    if(req.body.status === 'confirmed' && req.user.role !== 'provider'){
+      return res.status(401).json({ success: false, error: 'Not authorized to confirm this booking' });
+    } 
+    if(req.body.status === 'completed' && req.user.role !== 'customer'){
+      return res.status(401).json({ success: false, error: 'Not authorized to complete this booking' });
+    }
+    booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json({ success: true, data: booking });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Delete booking
+// @route   DELETE /api/bookings/:id
+// @access  Private
+export const deleteBooking = async (req, res, next) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ success: false, error: 'Booking not found' });
+    }
+
+    // Make sure user is booking owner or admin
+    if (booking.customer.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, error: 'Not authorized to delete this booking' });
+    }
+
+    await booking.deleteOne();
+
+    res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    next(err);
+  }
+};
+
+=== File: serviceController.js ===
+Path: controllers\serviceController.js
+
+import Service from '../models/Service.js';
+
+// @desc    Get all services
+// @route   GET /api/services
+// @access  Public
+export const getServices = async (req, res, next) => {
+  try {
+    const services = await Service.find().populate('provider', 'name email');
+    res.status(200).json({ success: true, count: services.length, data: services });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Get single service
+// @route   GET /api/services/:id
+// @access  Public
+export const getService = async (req, res, next) => {
+  try {
+    const service = await Service.findById(req.params.id).populate('provider', 'name email');
+    console.log("service details:",service);
+    if (!service) {
+      return res.status(404).json({ success: false, error: 'Service not found' });
+    }
+
+    res.status(200).json({ success: true, data: service });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Create new service
+// @route   POST /api/services
+// @access  Private (Provider only)
+export const createService = async (req, res, next) => {
+  try {
+    // Add user to req.body
+    req.body.provider = req.user.id;
+    const service = await Service.create(req.body); 
+    res.status(201).json({
+      success: true,
+      data: service
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Update service
+// @route   PUT /api/services/:id
+// @access  Private (Provider only)
+export const updateService = async (req, res, next) => {
+  try {
+    let service = await Service.findById(req.params.id);
+
+    if (!service) {
+      return res.status(404).json({ success: false, error: 'Service not found' });
+    }
+
+    // Make sure user is service provider
+    if (service.provider.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, error: 'Not authorized to update this service' });
+    }
+
+    service = await Service.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true
+    });
+
+    res.status(200).json({ success: true, data: service });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Delete service
+// @route   DELETE /api/services/:id
+// @access  Private (Provider only)
+export const deleteService = async (req, res, next) => {
+  try {
+    const service = await Service.findById(req.params.id);
+
+    if (!service) {
+      return res.status(404).json({ success: false, error: 'Service not found' });
+    }
+
+    // Make sure user is service provider
+    if (service.provider.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, error: 'Not authorized to delete this service' });
+    }
+
+    await Service.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ success: true, data: {} });
+  } catch (err) {
+    next(err);
+  }
+};
+
+=== File: Booking.js ===
+Path: models\Booking.js
+
+import mongoose from 'mongoose';
+
+const BookingSchema = new mongoose.Schema({
+  service: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Service',
+    required: true
+  },
+  customer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  provider: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  date: {
+    type: Date,
+    required: [true, 'Please provide a booking date']
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
+    default: 'pending'
+  },
+  totalPrice: {
+    type: Number,
+    required: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Booking = mongoose.model('Booking', BookingSchema);
+
+export default Booking;
+
+=== File: Service.js ===
+Path: models\Service.js
+
+import mongoose from 'mongoose';
+
+const ServiceSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Please provide a service name'],
+    trim: true,
+    maxlength: [100, 'Service name cannot be more than 100 characters']
+  },
+  category: {
+    type: String,
+    required: [true, 'Please provide a category'],
+    enum: ['plumbing', 'electrical', 'cleaning', 'landscaping', 'other']
+  },
+  description: {
+    type: String,
+    required: [true, 'Please provide a description'],
+    maxlength: [500, 'Description cannot be more than 500 characters']
+  },
+  provider: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  price: {
+    type: Number,
+    required: [true, 'Please provide a price']
+  },
+  isAvailable: {
+    type: Boolean,
+    default: true
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+const Service = mongoose.model('Service', ServiceSchema);
+
+export default Service;
+
+=== File: User.js ===
+Path: models\User.js
+
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: [true, 'Please provide a name'],
+    trim: true,
+    maxlength: [50, 'Name cannot be more than 50 characters']
+  },
+  email: {
+    type: String,
+    required: [true, 'Please provide an email'],
+    unique: true,
+    match: [
+      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+      'Please provide a valid email'
+    ]
+  },
+  password: {
+    type: String,
+    required: [true, 'Please provide a password'],
+    //minlength: [6, 'Password must be at least 6 characters'],
+    select: false
+  },
+  role: {
+    type: String,
+    enum: ['customer', 'provider', 'admin'],
+    default: 'customer'
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
+});
+
+// Encrypt password using bcrypt
+UserSchema.pre('save', async function(next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Match user entered password to hashed password in database
+UserSchema.methods.matchPassword = async function(enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+const User = mongoose.model('User', UserSchema);
+
+export default User;
+
+=== File: auth.js ===
+Path: routes\auth.js
+
+import express from 'express';
+import { register, login } from '../controllers/authController.js';
+
+const router = express.Router();
+
+router.post('/register', register);
+router.post('/login', login);
+
+export default router;
+
+=== File: bookings.js ===
+Path: routes\bookings.js
+
+import express from 'express';
+import {
+  getBookings,
+  getBooking,
+  createBooking,
+  updateBooking,
+  deleteBooking
+} from '../controllers/bookingController.js';
+
+const router = express.Router();
+
+import { protect, authorize } from '../middleware/auth.js';
+
+router
+  .route('/')
+  .get(protect, getBookings)
+  .post(protect, authorize('customer'), createBooking);
+
+router
+  .route('/:id')
+  .get(protect, getBooking)
+  .put(protect, updateBooking)
+  .delete(protect, authorize('customer', 'admin'), deleteBooking);
+ 
+export default router;
+
+=== File: service.js ===
+Path: routes\service.js
+
+import express from 'express';
+import {
+  getServices,
+  getService,
+  createService,
+  updateService,
+  deleteService
+} from '../controllers/serviceController.js';
+
+const router = express.Router();
+
+import { protect, authorize } from '../middleware/auth.js';
+
+router
+  .route('/')
+  .get(getServices)
+  .post(protect, authorize('provider', 'admin'), createService);
+
+router
+  .route('/:id')
+  .get(getService)
+  .put(protect, authorize('provider', 'admin'), updateService)
+  .delete(protect, authorize('provider', 'admin'), deleteService);
+
+export default router;

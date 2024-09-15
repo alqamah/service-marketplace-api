@@ -1,0 +1,57 @@
+.header {
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.navMenu ul {
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.navMenu li {
+  margin-right: 1rem;
+}
+
+.navMenu a {
+  color: white;
+  text-decoration: none;
+}
+
+.authSection {
+  display: flex;
+  align-items: center;
+}
+
+.authSection span {
+  margin-right: 1rem;
+}
+
+.authSection button,
+.authSection a {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  cursor: pointer;
+}
+
+.authSection button:hover,
+.authSection a:hover {
+  background-color: #0056b3;
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../redux/slices/authSlice';
+import styles from '../../styles/Header.module.css';
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -13,11 +14,11 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <div className="logo">
+    <header className={styles.header}>
+      <div className={styles.logo}>
         <Link to="/">Your Logo</Link>
       </div>
-      <nav className="nav-menu">
+      <nav className={styles.navMenu}>
         <ul>
           <li><Link to="/">Home</Link></li>
           <li><Link to="/services">Services</Link></li>
@@ -25,7 +26,7 @@ const Header = () => {
           <li><Link to="/contact">Contact</Link></li>
         </ul>
       </nav>
-      <div className="auth-section">
+      <div className={styles.authSection}>
         {isAuthenticated ? (
           <>
             <span>Welcome, {user.username}</span>

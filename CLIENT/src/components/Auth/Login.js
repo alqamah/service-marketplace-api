@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/slices/authSlice';
+import styles from '../../styles/Login.module.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,7 +14,7 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
+    <div className={styles.loginContainer}>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
