@@ -1,0 +1,36 @@
+client/
+├── public/
+│   └── index.html
+├── src/
+│   ├── components/
+│   │   ├── Layout/
+│   │   │   ├── Header.js
+│   │   │   ├── Footer.js
+│   │   │   └── Layout.js
+│   │   ├── Auth/
+│   │   │   ├── Login.js
+│   │   │   └── Register.js
+│   │   ├── Services/
+│   │   │   ├── ServiceList.js
+│   │   │   ├── ServiceItem.js
+│   │   │   └── ServiceForm.js
+│   │   └── Bookings/
+│   │       ├── BookingList.js
+│   │       ├── BookingItem.js
+│   │       └── BookingForm.js
+│   ├── pages/
+│   │   ├── Home.js
+│   │   ├── Services.js
+│   │   ├── Bookings.js
+│   │   └── Profile.js
+│   ├── redux/
+│   │   ├── store.js
+│   │   └── slices/
+│   │       ├── authSlice.js
+│   │       ├── serviceSlice.js
+│   │       └── bookingSlice.js
+│   ├── utils/
+│   │   └── api.js
+│   ├── App.js
+│   └── index.js
+└── package.json
