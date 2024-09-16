@@ -1,27 +1,25 @@
 import React, { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../../api/authService'
 import styles from '../../styles/Booking.module.css'
 
-
-export default function BookingCreate() {
-  const { serviceId } = useParams()
-  const navigate = useNavigate()
+export default function BookingCreate({ serviceId, onBookingComplete }) {
   const [service, setService] = useState(null)
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
-  const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchService = async () => {
       try {
         setLoading(true)
-        const response = await axios.get(`/api/services/${serviceId}`)
+        const response = await axiosInstance.get(`/services/${serviceId}`)
         setService(response.data.data)
         setError(null)
       } catch (error) {
-        console.error('Error fetching service', error)
+        console.error('Error fetching service details', error)
         setError('Failed to load service details. Please try again later.')
       } finally {
         setLoading(false)
@@ -33,11 +31,12 @@ export default function BookingCreate() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      await axios.post('/api/bookings', {
-        serviceId,
+      const response = await axiosInstance.post('/bookings', {
+        service: serviceId,
         date,
         time,
       })
+      onBookingComplete(response.data.data)
       navigate('/bookings')
     } catch (error) {
       console.error('Booking creation error', error)
@@ -60,6 +59,10 @@ export default function BookingCreate() {
   return (
     <div className={styles.createContainer}>
       <h1 className={styles.title}>Book {service.name}</h1>
+      <div className={styles.serviceDetails}>
+        <p className={styles.serviceDescription}>{service.description}</p>
+        <p className={styles.servicePrice}>Price: ${service.price.toFixed(2)}</p>
+      </div>
       <form className={styles.form} onSubmit={handleSubmit}>
         <input
           className={styles.input}
@@ -81,6 +84,7 @@ export default function BookingCreate() {
           Book Now
         </button>
       </form>
+      {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
   )
 }

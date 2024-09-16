@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
-import Logout from './Auth/Logout'
 import styles from '../styles/Navigation.module.css'
 
 export default function Navigation() {
@@ -20,11 +19,11 @@ export default function Navigation() {
             Services
           </Link>
         </li>
-        {isLoggedIn && (
+        {isLoggedIn ? (
           <>
             <li className={styles.navItem}>
               <Link className={styles.navLink} to="/bookings">
-                My Bookings
+                Bookings
               </Link>
             </li>
             <li className={styles.navItem}>
@@ -32,9 +31,13 @@ export default function Navigation() {
                 Profile
               </Link>
             </li>
+            <li className={styles.navItem}>
+              <Link className={styles.navLink} to="/logout">
+                Logout
+              </Link>
+            </li>
           </>
-        )}
-        {!isLoggedIn ? (
+        ) : (
           <>
             <li className={styles.navItem}>
               <Link className={styles.navLink} to="/login">
@@ -47,12 +50,6 @@ export default function Navigation() {
               </Link>
             </li>
           </>
-        ) : (
-          <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/logout">
-                Logout
-              </Link>
-            </li>
         )}
       </ul>
     </nav>

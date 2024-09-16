@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import styles from '../../styles/Service.module.css'
+import BookingCreate from '../Bookings/BookingCreate'
 
 export default function ServiceDetail() {
   const [service, setService] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { id } = useParams()
+ 
+  const [showBookingForm, setShowBookingForm] = useState(false)
 
   useEffect(() => {
     const fetchService = async () => {
@@ -26,14 +29,8 @@ export default function ServiceDetail() {
     fetchService()
   }, [id])
 
-  const handleBooking = async () => {
-    try {
-      await axios.post('/api/bookings', { serviceId: id })
-      alert('Booking successful!')
-    } catch (error) {
-      console.error('Error booking service', error)
-      alert('Booking failed. Please try again.')
-    }
+  const handleBooking = () => {
+    setShowBookingForm(true)
   }
 
   if (loading) {
@@ -60,17 +57,23 @@ export default function ServiceDetail() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>{service.name}</h1>
-      <div className={styles.serviceCard}>
-        <p className={styles.serviceInfo}>{service.description}</p>
-        <p className={styles.servicePrice}>Price: ${service.price.toFixed(2)}</p>
-        <button className={styles.button} onClick={handleBooking}>
-          Book Now
-        </button>
-      </div>
-      <Link to="/services" className={styles.backLink}>
-        Back to Services
-      </Link>
+      {showBookingForm ? (
+        <BookingCreate serviceId={id} onBookingComplete={() => setShowBookingForm(false)} />
+      ) : (
+        <>
+          <h1 className={styles.title}>{service.name}</h1>
+          <div className={styles.serviceCard}>
+            <p className={styles.serviceInfo}>{service.description}</p>
+            <p className={styles.servicePrice}>Price: ${service.price.toFixed(2)}</p>
+            <button className={styles.button} onClick={handleBooking}>
+              Book Now
+            </button>
+          </div>
+          <Link to="/services" className={styles.backLink}>
+            Back to Services
+          </Link>
+        </>
+      )}
     </div>
   )
 }

@@ -1,29 +1,42 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import axiosInstance from '../../api/authService'
+import { useAuth } from '../../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import styles from '../../styles/Booking.module.css'
 
 export default function BookingList() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { isLoggedIn } = useAuth()
+  const navigate = useNavigate()
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login')
+      return
+    }
+
     const fetchBookings = async () => {
       try {
         setLoading(true)
-        const response = await axios.get('/api/bookings')
+        const response = await axiosInstance.get('/bookings')
         console.log("fetched data:", response.data.data)
         setBookings(response.data.data)
         setError(null)
       } catch (error) {
         console.error('Error fetching bookings', error)
-        setError('Failed to load bookings. Please try again later.')
+        if (error.response && error.response.status === 401) {
+          setError('You are not authorized to view bookings. Please log in again.')
+        } else {
+          setError('Failed to load bookings. Please try again later.')
+        }
       } finally {
         setLoading(false)
       }
     }
     fetchBookings()
-  }, [])
+  }, [isLoggedIn, navigate])
 
   if (loading) {
     return <div className={styles.container}><p className={styles.loadingMessage}>Loading bookings...</p></div>

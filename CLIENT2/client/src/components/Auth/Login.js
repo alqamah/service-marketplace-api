@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import axios from 'axios'
-import styles from '../../styles/Login.module.css'
 import { useAuth } from '../../contexts/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import { loginUser } from '../../api/authService'
+import styles from '../../styles/Login.module.css'
 
 export default function Login() {
   const [email, setEmail] = useState('')
@@ -15,19 +15,13 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api/auth/login', { email, password })
-      console.log(response.data)
+      const data = await loginUser(email, password)
       setMessage('Login successful!')
       setIsError(false)
-      // Handle successful login
-      const token = response.data.token // Adjust this based on your API response structure
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      // Update AuthContext
-      login()
-      // Redirect to services page after successful login
+      login(data.token)
       navigate('/services')
     } catch (error) {
-      console.error('Login error', error.response?.data)
+      console.error('Login error', error)
       setMessage('Login failed. Please check your credentials.')
       setIsError(true)
     }
