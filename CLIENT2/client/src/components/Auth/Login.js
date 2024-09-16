@@ -16,6 +16,9 @@ export default function Login() {
       setMessage('Login successful!')
       setIsError(false)
       // Handle successful login (e.g., store token, redirect)
+      const token = response.data.token // Adjust this based on your API response structure
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      
     } catch (error) {
       console.error('Login error', error.response?.data)
       setMessage('Login failed. Please check your credentials.')
