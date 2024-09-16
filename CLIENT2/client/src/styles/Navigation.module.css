@@ -1,27 +1,27 @@
 .nav {
-  background-color: #e1e1e1;
+  background-color: #4a90e2;
   padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .navList {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .navItem {
   margin: 0 0.5rem;
 }
 
-.navLink li{
+.navLink {
   color: white;
   text-decoration: none;
+  font-size: 1rem;
   font-weight: bold;
-  transition: color 0.3s ease;
-}
-
-.navLink:hover {
-  color: #ffd700;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s;
 }

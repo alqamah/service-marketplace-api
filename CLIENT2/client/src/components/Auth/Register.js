@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import styles from '../../styles/Register.module.css'
+import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
   const [name, setName] = useState('')
@@ -9,6 +10,7 @@ export default function Register() {
   const [role, setRole] = useState('customer')
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
+  const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -17,7 +19,10 @@ export default function Register() {
       console.log(response.data)
       setMessage('Registration successful!')
       setIsError(false)
-      // Handle successful registration (e.g., redirect to login)
+      // Redirect to login page after successful registration
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000) // Delay for 2 seconds to show the success message
     } catch (error) {
       console.error('Registration error', error.response?.data)
       setMessage('Registration failed. Please try again.')

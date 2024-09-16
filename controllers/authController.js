@@ -63,6 +63,22 @@ export const login = async (req, res, next) => {
   }
 };
 
+// @desc    Logout user
+// @route   POST /api/auth/logout
+// @access  Private
+export const logout = async (req, res, next) => {
+  try {
+    // In a stateless JWT authentication system, we don't need to do anything server-side
+    // The client should remove the token from local storage or cookies
+
+    res.status(200).json({
+      success: true,
+      message: 'Logged out successfully'
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 
 // Helper function to get token from model, create cookie and send response
