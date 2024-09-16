@@ -18,7 +18,6 @@ export const getServices = async (req, res, next) => {
 export const getService = async (req, res, next) => {
   try {
     const service = await Service.findById(req.params.id).populate('provider', 'name email');
-    console.log("service details:",service);
     if (!service) {
       return res.status(404).json({ success: false, error: 'Service not found' });
     }
