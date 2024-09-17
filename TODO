@@ -1,5 +1,6 @@
 styles
 booking page displays provider and customer name
 add comments in booking schema
-add filter services for categories, providers, etc.
-
+add filter, search, and sort services for categories, providers, etc.
+add CRUD service operations for providers
+add superuser features for admin to manage bookings, services, providers, etc.
