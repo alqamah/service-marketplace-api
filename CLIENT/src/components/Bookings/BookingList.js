@@ -17,24 +17,43 @@ export default function BookingList() {
       return
     }
 
-    const fetchBookings = async () => {
-      try {
-        setLoading(true)
-        const response = await axiosInstance.get('/bookings')
-        setBookings(response.data.data)
-        setError(null)
-      } catch (error) {
-        if (error.response && error.response.status === 401) {
-          setError('You are not authorized to view bookings. Please log in again.')
-        } else {
-          setError('Failed to load bookings. Please try again later.')
-        }
-      } finally {
-        setLoading(false)
-      }
-    }
     fetchBookings()
   }, [isLoggedIn, navigate])
+
+  const fetchBookings = async () => {
+    try {
+      setLoading(true)
+      const response = await axiosInstance.get('/bookings')
+      setBookings(response.data.data)
+      setError(null)
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        setError('You are not authorized to view bookings. Please log in again.')
+      } else {
+        setError('Failed to load bookings. Please try again later.')
+      }
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const updateBookingStatus = async (bookingId, newStatus) => {
+    try {
+      await axiosInstance.put(`/bookings/${bookingId}`, { status: newStatus })
+      fetchBookings() // Refresh the bookings list
+    } catch (error) {
+      setError('Failed to update booking status. Please try again.')
+    }
+  }
+
+  const cancelBooking = async (bookingId) => {
+    try {
+      await axiosInstance.delete(`/bookings/${bookingId}`)
+      fetchBookings() // Refresh the bookings list
+    } catch (error) {
+      setError('Failed to cancel booking. Please try again.')
+    }
+  }
 
   if (loading) {
     return <div className={styles.container}><p className={styles.loadingMessage}>Loading bookings...</p></div>
@@ -60,6 +79,7 @@ export default function BookingList() {
               <p className={`${styles.bookingStatus} ${
                 booking.status === 'pending' ? styles.statusPending :
                 booking.status === 'confirmed' ? styles.statusConfirmed :
+                booking.status === 'completed' ? styles.statusCompleted :
                 styles.statusCancelled
               }`}>
                 Status: {booking.status}
@@ -67,6 +87,36 @@ export default function BookingList() {
               <p className={styles.bookingPrice}>
                 Total Price: ₹{booking.totalPrice.toFixed(2)}
               </p>
+              {booking.status === 'pending' && (
+                <>
+                  <button 
+                    className={styles.confirmButton}
+                    onClick={() => updateBookingStatus(booking._id, 'confirmed')}
+                  >
+                    Confirm Booking
+                  </button>
+                  <button 
+                    className={styles.cancelButton}
+                    onClick={() => cancelBooking(booking._id)}
+                  >
+                    Cancel Booking
+                  </button>
+                </>
+              )}
+              {(booking.status === 'confirmed' || booking.status === 'pending') && (
+                <button 
+                  className={styles.completeButton}
+                  onClick={() => updateBookingStatus(booking._id, 'completed')}
+                >
+                  Mark as Completed
+                </button>
+              )}
+              <button 
+                className={styles.updateButton}
+                onClick={() => navigate(`/bookings/${booking._id}/edit`)}
+              >
+                Update Booking
+              </button>
             </li>
           ))}
         </ul>

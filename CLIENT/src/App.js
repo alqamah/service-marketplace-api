@@ -11,6 +11,7 @@ import ServiceDetail from './components/Services/ServiceDetail.js';
 import BookingCreate from './components/Bookings/BookingCreate.js';
 import BookingList from './components/Bookings/BookingList.js';
 import Profile from './components/Profile.js';
+import EditBooking from './components/Bookings/EditBooking';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/book/:serviceId" element={<BookingCreate />} />
             <Route path="/bookings" element={<BookingList />} />
+            <Route path="/bookings/:id/edit" element={<EditBooking />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
