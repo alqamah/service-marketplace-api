@@ -25,7 +25,7 @@ export default function ServiceList() {
         <div key={service._id} className={styles.serviceCard}>
           <h3 className={styles.serviceName}>{service.name}</h3>
           <p className={styles.serviceDescription}>{service.description}</p>
-          <p className={styles.servicePrice}>Price: ${service.price}</p>
+          <p className={styles.servicePrice}>Price: ₹{service.price}</p>
           <Link to={`/services/${service._id}`} className={styles.link}>
             View Details
           </Link>

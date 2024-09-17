@@ -65,7 +65,7 @@ export default function BookingList() {
                 Status: {booking.status}
               </p>
               <p className={styles.bookingPrice}>
-                Total Price: ${booking.totalPrice.toFixed(2)}
+                Total Price: ₹{booking.totalPrice.toFixed(2)}
               </p>
             </li>
           ))}

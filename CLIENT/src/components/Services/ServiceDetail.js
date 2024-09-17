@@ -64,7 +64,7 @@ export default function ServiceDetail() {
           <h1 className={styles.title}>{service.name}</h1>
           <div className={styles.serviceCard}>
             <p className={styles.serviceInfo}>{service.description}</p>
-            <p className={styles.servicePrice}>Price: ${service.price.toFixed(2)}</p>
+            <p className={styles.servicePrice}>Price: ₹{service.price.toFixed(2)}</p>
             <button className={styles.button} onClick={handleBooking}>
               Book Now
             </button>
