@@ -65,7 +65,11 @@ export default function BookingList() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>My Bookings</h1>
+      {user.role === 'admin' ? (
+        <h1 className={styles.title}>Bookings</h1>
+      ) : (
+        <h1 className={styles.title}>My Bookings</h1>
+      )}
       {bookings.length === 0 ? (
         <p className={styles.bookingInfo}>You have no bookings yet.</p>
       ) : (
