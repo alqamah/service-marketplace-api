@@ -1,16 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import Navigation from './components/Navigation';
+import { AuthProvider } from './contexts/AuthContext.js';
+import Navigation from './components/Navigation.js';
 import Home from './components/Homepage.js';
-import Login from './components/Auth/Login';
-import Logout from './components/Auth/Logout';
+import Login from './components/Auth/Login.js';
+import Logout from './components/Auth/Logout.js';
 import Register from './components/Auth/Register.js';
-import ServiceList from './components/Services/ServiceList';
-import ServiceDetail from './components/Services/ServiceDetail';
-import BookingCreate from './components/Bookings/BookingCreate';
-import BookingList from './components/Bookings/BookingList';
-import Profile from './components/Profile';
+import ServiceList from './components/Services/ServiceList.js';
+import ServiceDetail from './components/Services/ServiceDetail.js';
+import BookingCreate from './components/Bookings/BookingCreate.js';
+import BookingList from './components/Bookings/BookingList.js';
+import Profile from './components/Profile.js';
 
 function App() {
   return (
