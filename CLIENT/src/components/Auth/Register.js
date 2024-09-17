@@ -15,8 +15,7 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
-      const response = await axios.post('/api/auth/register', { name, email, password, role })
-      console.log(response.data)
+      await axios.post('/api/auth/register', { name, email, password, role })
       setMessage('Registration successful!')
       setIsError(false)
       // Redirect to login page after successful registration
@@ -24,7 +23,6 @@ export default function Register() {
         navigate('/login')
       }, 2000) // Delay for 2 seconds to show the success message
     } catch (error) {
-      console.error('Registration error', error.response?.data)
       setMessage('Registration failed. Please try again.')
       setIsError(true)
     }

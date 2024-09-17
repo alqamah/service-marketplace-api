@@ -18,7 +18,7 @@ export default function Login() {
       const data = await loginUser(email, password)
       setMessage('Login successful!')
       setIsError(false)
-      login(data.token)
+      login(data.token, data.user)
       navigate('/services')
     } catch (error) {
       console.error('Login error', error)

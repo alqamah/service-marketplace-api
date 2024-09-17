@@ -21,11 +21,9 @@ export default function BookingList() {
       try {
         setLoading(true)
         const response = await axiosInstance.get('/bookings')
-        console.log("fetched data:", response.data.data)
         setBookings(response.data.data)
         setError(null)
       } catch (error) {
-        console.error('Error fetching bookings', error)
         if (error.response && error.response.status === 401) {
           setError('You are not authorized to view bookings. Please log in again.')
         } else {

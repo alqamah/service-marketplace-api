@@ -1,29 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useAuth } from '../contexts/AuthContext';
+import styles from '../styles/Profile.module.css';
 
 function Profile() {
   const [user, setUser] = useState(null);
+  const { user: authUser } = useAuth();
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response = await axios.get('/api/users/me');
-        setUser(response.data.data);
-      } catch (error) {
-        console.error('Error fetching profile', error);
+    const fetchProfile = () => {
+      if (authUser) {
+        setUser(authUser);
       }
     };
     fetchProfile();
-  }, []);
+  }, [authUser]);
 
-  if (!user) return <div>Loading...</div>;
+  if (!user) return <div className={styles.loadingMessage}>Loading...</div>;
 
   return (
-    <div>
-      <h2>My Profile</h2>
-      <p>Name: {user.name}</p>
-      <p>Email: {user.email}</p>
-      <p>Role: {user.role}</p>
+    <div className={styles.container}>
+      <h2 className={styles.title}>My Profile</h2>
+      <div className={styles.profileCard}>
+        <p className={styles.profileInfo}>
+          <span className={styles.profileLabel}>Name:</span>
+          <span className={styles.profileValue}>{user.name}</span>
+        </p>
+        <p className={styles.profileInfo}>
+          <span className={styles.profileLabel}>Email:</span>
+          <span className={styles.profileValue}>{user.email}</span>
+        </p>
+        <p className={styles.profileInfo}>
+          <span className={styles.profileLabel}>Role:</span>
+          <span className={styles.profileValue}>{user.role}</span>
+        </p>
+      </div>
     </div>
   );
 }
