@@ -167,3 +167,25 @@
 .updateButton:active {
   opacity: 0.6;
 }
+
+/* Style for submit button in EditBooking component */
+.submitButton {
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.submitButton:hover {
+  background-color: #357abd;
+}
+
+.submitButton:active {
+  opacity: 0.8;
+}
