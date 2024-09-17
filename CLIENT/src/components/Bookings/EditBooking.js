@@ -4,7 +4,6 @@ import axiosInstance from '../../api/authService';
 import styles from '../../styles/Booking.module.css';
 
 export default function EditBooking() {
-  const [booking, setBooking] = useState(null);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
   const [loading, setLoading] = useState(true);
@@ -16,7 +15,6 @@ export default function EditBooking() {
     const fetchBooking = async () => {
       try {
         const response = await axiosInstance.get(`/bookings/${id}`);
-        setBooking(response.data.data);
         const dateTime = new Date(response.data.data.date);
         setDate(dateTime.toISOString().split('T')[0]);
         setTime(dateTime.toTimeString().slice(0, 5));

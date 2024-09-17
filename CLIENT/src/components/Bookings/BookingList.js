@@ -8,7 +8,7 @@ export default function BookingList() {
   const [bookings, setBookings] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { isLoggedIn } = useAuth()
+  const { isLoggedIn, user } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -87,36 +87,82 @@ export default function BookingList() {
               <p className={styles.bookingPrice}>
                 Total Price: ₹{booking.totalPrice.toFixed(2)}
               </p>
-              {booking.status === 'pending' && (
+              {booking.status !== 'completed' && (
                 <>
-                  <button 
-                    className={styles.confirmButton}
-                    onClick={() => updateBookingStatus(booking._id, 'confirmed')}
-                  >
-                    Confirm Booking
-                  </button>
-                  <button 
-                    className={styles.cancelButton}
-                    onClick={() => cancelBooking(booking._id)}
-                  >
-                    Cancel Booking
-                  </button>
+                  {user.role === 'admin' && (
+                    <>
+                      <button 
+                        className={styles.confirmButton}
+                        onClick={() => updateBookingStatus(booking._id, 'confirmed')}
+                      >
+                        Confirm Booking
+                      </button>
+                      <button 
+                        className={styles.cancelButton}
+                        onClick={() => cancelBooking(booking._id)}
+                      >
+                        Cancel Booking
+                      </button>
+                      <button 
+                        className={styles.completeButton}
+                        onClick={() => updateBookingStatus(booking._id, 'completed')}
+                      >
+                        Mark as Completed
+                      </button>
+                      <button 
+                        className={styles.updateButton}
+                        onClick={() => navigate(`/bookings/${booking._id}/edit`)}
+                      >
+                        Update Booking
+                      </button>
+                    </>
+                  )}
+                  {user.role === 'provider' && (
+                    <>
+                      <button 
+                        className={styles.confirmButton}
+                        onClick={() => updateBookingStatus(booking._id, 'confirmed')}
+                      >
+                        Confirm Booking
+                      </button>
+                      <button 
+                        className={styles.cancelButton}
+                        onClick={() => cancelBooking(booking._id)}
+                      >
+                        Cancel Booking
+                      </button>
+                      <button 
+                        className={styles.updateButton}
+                        onClick={() => navigate(`/bookings/${booking._id}/edit`)}
+                      >
+                        Update Booking
+                      </button>
+                    </>
+                  )}
+                  {user.role === 'customer' && (
+                    <>
+                      <button 
+                        className={styles.cancelButton}
+                        onClick={() => cancelBooking(booking._id)}
+                      >
+                        Cancel Booking
+                      </button>
+                      <button 
+                        className={styles.updateButton}
+                        onClick={() => navigate(`/bookings/${booking._id}/edit`)}
+                      >
+                        Update Booking
+                      </button>
+                      <button 
+                        className={styles.completeButton}
+                        onClick={() => updateBookingStatus(booking._id, 'completed')}
+                      >
+                        Mark as Completed
+                      </button>
+                    </>
+                  )}
                 </>
               )}
-              {(booking.status === 'confirmed' || booking.status === 'pending') && (
-                <button 
-                  className={styles.completeButton}
-                  onClick={() => updateBookingStatus(booking._id, 'completed')}
-                >
-                  Mark as Completed
-                </button>
-              )}
-              <button 
-                className={styles.updateButton}
-                onClick={() => navigate(`/bookings/${booking._id}/edit`)}
-              >
-                Update Booking
-              </button>
             </li>
           ))}
         </ul>

@@ -54,6 +54,10 @@
   color: #e74c3c;
 }
 
+.statusCompleted {
+  color: #3498db;
+}
+
 .bookingPrice {
   font-weight: bold;
   color: #333;
@@ -109,4 +113,57 @@
   background-color: #f0f4f8;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles for booking buttons */
+.confirmButton,
+.cancelButton,
+.completeButton,
+.updateButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, opacity 0.3s;
+  margin-right: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.confirmButton {
+  background-color: transparent;
+  color: #27ae60;
+  border: 2px solid #27ae60;
+}
+
+.cancelButton {
+  background-color: transparent;
+  color: #e74c3c;
+  border: 2px solid #e74c3c;
+}
+
+.completeButton {
+  background-color: transparent;
+  color: #3498db;
+  border: 2px solid #3498db;
+}
+
+.updateButton {
+  background-color: transparent;
+  color: #f39c12;
+  border: 2px solid #f39c12;
+}
+
+.confirmButton:hover,
+.cancelButton:hover,
+.completeButton:hover,
+.updateButton:hover {
+  opacity: 0.8;
+}
+
+.confirmButton:active,
+.cancelButton:active,
+.completeButton:active,
+.updateButton:active {
+  opacity: 0.6;
 }
