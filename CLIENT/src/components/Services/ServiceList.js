@@ -20,17 +20,27 @@ export default function ServiceList() {
 
   return (
     <div className={styles.container}>
-      <h2 className={styles.title}>Available Services</h2>
-      {services.map((service) => (
-        <div key={service._id} className={styles.serviceCard}>
-          <h3 className={styles.serviceName}>{service.name}</h3>
-          <p className={styles.serviceDescription}>{service.description}</p>
-          <p className={styles.servicePrice}>Price: ₹{service.price}</p>
-          <Link to={`/services/${service._id}`} className={styles.link}>
-            View Details
-          </Link>
-        </div>
-      ))}
+      <h1>Available Services</h1>
+      <div className={styles.grid}>
+        {services.map((service) => (
+          <div key={service._id} className={styles.card}>
+            <div className={styles['card-header']}>
+              <h2 className={styles['card-title']}>{service.name}</h2>
+            </div>
+            <div className={styles['card-content']}>
+              <p className={`${styles['text-gray-600']} ${styles['mb-4']}`}>{service.description}</p>
+              <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+                <span className={`${styles['text-2xl']} ${styles['font-bold']} ${styles['text-yellow-400']}`}>
+                  ₹{service.price}
+                </span>
+                <Link to={`/services/${service._id}`} className={`${styles.button} ${styles['button-ghost']}`}>
+                  View Details
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

@@ -34,14 +34,14 @@ export default function ServiceDetail() {
   }
 
   if (loading) {
-    return <div className={styles.container}><p className={styles.loadingMessage}>Loading...</p></div>
+    return <div className={styles.container}><p className={styles['text-gray-600']}>Loading...</p></div>
   }
 
   if (error) {
     return (
       <div className={styles.container}>
-        <p className={styles.errorMessage}>{error}</p>
-        <Link to="/services" className={styles.backLink}>Back to Services</Link>
+        <p className={styles['text-gray-600']}>{error}</p>
+        <Link to="/services" className={`${styles.button} ${styles['button-ghost']}`}>Back to Services</Link>
       </div>
     )
   }
@@ -49,8 +49,8 @@ export default function ServiceDetail() {
   if (!service) {
     return (
       <div className={styles.container}>
-        <p className={styles.errorMessage}>Service not found.</p>
-        <Link to="/services" className={styles.backLink}>Back to Services</Link>
+        <p className={styles['text-gray-600']}>Service not found.</p>
+        <Link to="/services" className={`${styles.button} ${styles['button-ghost']}`}>Back to Services</Link>
       </div>
     )
   }
@@ -60,19 +60,27 @@ export default function ServiceDetail() {
       {showBookingForm ? (
         <BookingCreate serviceId={id} onBookingComplete={() => setShowBookingForm(false)} />
       ) : (
-        <>
-          <h1 className={styles.title}>{service.name}</h1>
-          <div className={styles.serviceCard}>
-            <p className={styles.serviceInfo}>{service.description}</p>
-            <p className={styles.servicePrice}>Price: ₹{service.price.toFixed(2)}</p>
-            <button className={styles.button} onClick={handleBooking}>
-              Book Now
-            </button>
+        <div className={styles.card}>
+          <div className={styles['card-header']}>
+            <h1 className={styles['card-title']}>{service.name}</h1>
           </div>
-          <Link to="/services" className={styles.backLink}>
-            Back to Services
-          </Link>
-        </>
+          <div className={styles['card-content']}>
+            <p className={`${styles['text-gray-600']} ${styles['mb-4']}`}>{service.description}</p>
+            <div className={`${styles.flex} ${styles['justify-between']} ${styles['items-center']}`}>
+              <span className={`${styles['text-2xl']} ${styles['font-bold']} ${styles['text-yellow-400']}`}>
+                ₹{service.price.toFixed(2)}
+              </span>
+              <button className={styles.button} onClick={handleBooking}>
+                Book Now
+              </button>
+            </div>
+          </div>
+          <div className={styles['card-footer']}>
+            <Link to="/services" className={`${styles.button} ${styles['button-ghost']} ${styles['w-full']}`}>
+              Back to Services
+            </Link>
+          </div>
+        </div>
       )}
     </div>
   )
