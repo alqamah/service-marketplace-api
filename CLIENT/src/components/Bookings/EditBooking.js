@@ -48,11 +48,12 @@ export default function EditBooking() {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={styles.editContainer}>
       <h1 className={styles.title}>Edit Booking</h1>
-      <form onSubmit={handleSubmit} className={styles.form}>
-        <label className={styles.label}>
-          Date:
+      {loading && <p className={styles.loadingMessage}>Loading...</p>}
+      {error && <p className={styles.errorMessage}>{error}</p>}
+      {!loading && !error && (
+        <form onSubmit={handleSubmit} className={styles.form}>
           <input
             type="date"
             value={date}
@@ -60,9 +61,6 @@ export default function EditBooking() {
             className={styles.input}
             required
           />
-        </label>
-        <label className={styles.label}>
-          Time:
           <input
             type="time"
             value={time}
@@ -70,9 +68,9 @@ export default function EditBooking() {
             className={styles.input}
             required
           />
-        </label>
-        <button type="submit" className={styles.submitButton}>Update Booking</button>
-      </form>
+          <button type="submit" className={styles.submitButton}>Update Booking</button>
+        </form>
+      )}
     </div>
   );
 }

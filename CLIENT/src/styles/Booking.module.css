@@ -3,6 +3,8 @@
   margin: 0 auto;
   padding: 2rem;
   background-color: #f0f4f8;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .title {
@@ -13,6 +15,9 @@
 }
 
 .bookingList {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
   list-style: none;
   padding: 0;
 }
@@ -21,7 +26,6 @@
   background-color: white;
   border-radius: 8px;
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -79,7 +83,7 @@
   margin-bottom: 1rem;
 }
 
-/* Styles for BookingCreate component */
+/* Styles for BookingCreate and EditBooking components */
 .form {
   display: flex;
   flex-direction: column;
@@ -95,18 +99,33 @@
 }
 
 .button {
-  padding: 0.75rem;
+  padding: 0.75rem 1.5rem;
   font-size: 1rem;
   background-color: #4a90e2;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, opacity 0.3s;
+  margin-top: 0.5rem;
 }
 
-/* Adjust container for BookingCreate */
-.createContainer {
+.button:hover {
+  background-color: #357ab8;
+}
+
+.button:active {
+  background-color: #2c5a8a;
+}
+
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Adjust container for BookingCreate and EditBooking */
+.createContainer,
+.editContainer {
   max-width: 500px;
   margin: 0 auto;
   padding: 2rem;
@@ -132,33 +151,28 @@
 }
 
 .confirmButton {
-  background-color: transparent;
-  color: #27ae60;
-  border: 2px solid #27ae60;
+  background-color: #27ae60;
+  color: white;
 }
 
 .cancelButton {
-  background-color: transparent;
-  color: #e74c3c;
-  border: 2px solid #e74c3c;
+  background-color: #e74c3c;
+  color: white;
 }
 
 .completeButton {
-  background-color: transparent;
-  color: #3498db;
-  border: 2px solid #3498db;
+  background-color: #3498db;
+  color: white;
 }
 
 .updateButton {
-  background-color: transparent;
-  color: #f39c12;
-  border: 2px solid #f39c12;
+  background-color: #f39c12;
+  color: white;
 }
 
 .submitButton {
-  background-color: white;
-  color: #3498db;
-  border: 2px solid #3498db;
+  background-color: #4a90e2;
+  color: white;
 }
 
 .confirmButton:hover,
