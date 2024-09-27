@@ -4,7 +4,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to right, #4a90e2, #7e57c2);
+  background: linear-gradient(270deg, #4a90e2, #7e57c2);
+  background-size: 400% 400%;
+  animation: gradientAnimation 15s ease infinite;
   color: white;
   text-align: center;
   padding: 20px;
@@ -56,16 +58,21 @@
 .primaryButton {
   background-color: white;
   color: #4a90e2;
+  border: 2px solid rgba(255, 255, 255, 0.525);
+
 }
 
 .secondaryButton {
   background-color: #7e57c2;
   color: white;
+  border: 2px solid rgba(255, 255, 255, 0.507);
 }
 
 .button:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid rgb(255, 255, 255);
+
 }
 
 .button:active {
@@ -100,5 +107,17 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }
