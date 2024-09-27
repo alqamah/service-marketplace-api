@@ -58,20 +58,21 @@
 .primaryButton {
   background-color: white;
   color: #4a90e2;
-  border: 2px solid rgba(255, 255, 255, 0.525);
+  border: 2px solid rgba(255, 255, 255, 0);
 
 }
 
 .secondaryButton {
   background-color: #7e57c2;
   color: white;
-  border: 2px solid rgba(255, 255, 255, 0.507);
+  border: 2px solid rgba(255, 255, 255, 0);
 }
 
 .button:hover {
   transform: translateY(-3px);
   box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-  border: 2px solid rgb(255, 255, 255);
+  border: 2px solid rgba(255, 255, 255, 0.108);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.191) inset;
 
 }
 
