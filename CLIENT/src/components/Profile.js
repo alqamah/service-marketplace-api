@@ -33,6 +33,14 @@ function Profile() {
           <span className={styles.profileLabel}>Role:</span>
           <span className={styles.profileValue}>{user.role}</span>
         </p>
+        <p className={styles.profileInfo}>
+          <span className={styles.profileLabel}>Phone:</span>
+          <span className={styles.profileValue}>{user.phone||"Not provided"}</span>
+        </p>
+        <p className={styles.profileInfo}>
+          <span className={styles.profileLabel}>Address:</span>
+          <span className={styles.profileValue}>{user.address||"Not provided"}</span>
+        </p>
       </div>
     </div>
   );
