@@ -83,7 +83,6 @@ export const logout = async (req, res, next) => {
 export const editProfile = async (req, res, next) => {
   try{
     const { address, phone } = req.body;
-    
     const user = await User.findById(req.user.id);
     if (address) user.address = address;
     if (phone) user.phone = phone;
