@@ -17,6 +17,20 @@ const UserSchema = new mongoose.Schema({
       'Please provide a valid email'
     ]
   },
+  address:{
+    type: String
+  },
+  phone:{
+    type: Number,
+    // required: [true, 'Please provide a phone number'],
+    unique: true,
+    validate: {
+      validator: function(v) {
+        return v.toString().length === 10;
+      },
+      message: 'Please enter a valid phone number'
+    }
+  },
   password: {
     type: String,
     required: [true, 'Please provide a password'],

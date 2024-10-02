@@ -16,6 +16,9 @@ const BookingSchema = new mongoose.Schema({
     ref: 'User',
     required: true
   },
+  notes:{
+    type: String
+  },
   date: {
     type: Date,
     required: [true, 'Please provide a booking date']

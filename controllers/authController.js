@@ -80,6 +80,24 @@ export const logout = async (req, res, next) => {
   }
 };
 
+export const editProfile = async (req, res, next) => {
+  try{
+    const { address, phone } = req.body;
+    
+    const user = await User.findById(req.user.id);
+    if (address) user.address = address;
+    if (phone) user.phone = phone;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      user
+    });
+  }catch (err){
+    next (err);
+  }
+}
 
 // Helper function to get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res) => {
