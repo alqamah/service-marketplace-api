@@ -27,13 +27,29 @@
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.05rem;
   padding: 0.5rem 1rem;
-  transition: .1s linear;
+  transition: .2s linear;
   display: inline-block;  
   border-radius: 10px;
+  position: relative;
 }
 
 .navLink:hover{
-  transform: translateY(2px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50px;  
+}
+
+.activeLink::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.785);
+  border-radius: 5px;
+}
+.activeLink{
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.39);
 }
 
 

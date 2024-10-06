@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import styles from '../styles/Navigation.module.css'
 
@@ -10,44 +10,44 @@ export default function Navigation() {
     <nav className={styles.nav}>
       <ul className={styles.navList}>
         <li className={styles.navItem}>
-          <Link className={styles.navLink} to="/">
+          <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/" end>
             Home
-          </Link>
+          </NavLink>
         </li>
         <li className={styles.navItem}>
-          <Link className={styles.navLink} to="/services">
+          <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/services">
             Services
-          </Link>
+          </NavLink>
         </li>
         {isLoggedIn ? (
           <>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/bookings">
+              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/bookings">
                 Bookings
-              </Link>
+              </NavLink>
             </li>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/profile">
+              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/profile">
                 Profile
-              </Link>
+              </NavLink>
             </li>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/logout">
+              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/logout">
                 Logout
-              </Link>
+              </NavLink>
             </li>
           </>
         ) : (
           <>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/login">
+              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/login">
                 Login
-              </Link>
+              </NavLink>
             </li>
             <li className={styles.navItem}>
-              <Link className={styles.navLink} to="/register">
+              <NavLink className={({ isActive }) => `${styles.navLink} ${isActive ? styles.activeLink : ''}`} to="/register">
                 Register
-              </Link>
+              </NavLink>
             </li>
           </>
         )}
