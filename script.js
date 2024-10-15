@@ -28,7 +28,7 @@ const combineFiles = (dirPath, outputFilePath, excludedFiles) => {
     }
 
     // Loop through each file in the directory
-    files.forEach((file) => {
+    files.forEach((file) => { 
       const filePath = path.join(dirPath, file);
 
       // Skip excluded files

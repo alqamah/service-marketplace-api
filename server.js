@@ -4,6 +4,7 @@ dotenv.config();
 import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import morgan from 'morgan';
 import errorHandler from './utils/errorHandler.js';
 
 // Import routes
@@ -17,6 +18,21 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Use morgan for logging
+app.use(morgan((tokens, req, res) => {
+  const date = new Date(tokens.date(req, res));
+  const istDate = new Date(date.getTime() + (5.5 * 60 * 60 * 1000)); // Convert to IST
+  const istDateString = istDate.toISOString().replace('Z', '').substring(0, 19).replace('T', ' ');
+  return [
+    `[${istDateString}]`,
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens['response-time'](req, res), 'ms -',
+    tokens.res(req, res, 'content-length')
+  ].join(' ');
+}));
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
